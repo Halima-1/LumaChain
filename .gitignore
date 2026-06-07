@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+build/
+coverage/
+.npm
+.pnpm-store
+
+# Rust / Cargo
+target/
+**/*.rs.bk
+
+# Env variables
+.env
+.env.*
+!.env.example
+.contract-ids.env
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
