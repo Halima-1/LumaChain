@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "solar_asset",
+    "registry",
+    "warranty",
+    "maintenance_log"
+]
+
+[workspace.dependencies]
+soroban-sdk = { version = "21", features = ["testutils"] }

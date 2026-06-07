@@ -1,0 +1,31 @@
+{
+  "name": "@lumachain/sdk",
+  "version": "0.1.0",
+  "description": "LumaChain TypeScript SDK — Stellar/Soroban solar supply chain",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@stellar/freighter-api": "^2.0.0",
+    "@stellar/stellar-sdk": "^12.0.0",
+    "@zxing/library": "^0.20.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/qrcode": "^1.5.5",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}
