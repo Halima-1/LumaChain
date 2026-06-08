@@ -127,6 +127,7 @@ impl SolarAsset {
     }
 }
 
+#[cfg(test)]
 mod test {
     // Basic test module to satisfy requirements
     use super::*;

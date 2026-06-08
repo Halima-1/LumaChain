@@ -25,13 +25,13 @@ log() { echo "▶  $*"; }
 log "Building contracts..."
 (
   cd "$CONTRACTS_DIR"
-  cargo build --release --target wasm32-unknown-unknown
+  stellar contract build
 )
 
 # ─── Helper: deploy one contract and return its contract ID ───────────────────
 deploy_contract() {
   local name="$1"
-  local wasm_path="$CONTRACTS_DIR/target/wasm32-unknown-unknown/release/${name}.wasm"
+  local wasm_path=$(find "$CONTRACTS_DIR/target" -name "${name}.wasm" | grep release | head -n 1)
 
   log "Deploying $name..."
   stellar contract deploy \
