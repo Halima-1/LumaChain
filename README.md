@@ -2,6 +2,64 @@
 
 **LumaChain** is a decentralized Web3 supply chain management platform specifically tailored for the solar energy industry. Built natively on the **Stellar/Soroban** smart contract network, it provides immutable, end-to-end traceability for solar assets (panels, inverters, batteries) from manufacturing through installation, warranty, and maintenance.
 
+## 🗺️ Architecture Overview
+
+```
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │                         Stellar Testnet                              │
+  │                     (Soroban Smart Contracts)                        │
+  │                                                                      │
+  │  ┌──────────────┐   ┌──────────────┐   ┌──────────────┐            │
+  │  │  solar_asset │   │   registry   │   │   warranty   │            │
+  │  │              │   │              │   │              │            │
+  │  │ • Mint       │   │ • Register   │   │ • Init       │            │
+  │  │ • Transfer   │◄──│ • Lookup     │   │ • File Claim │            │
+  │  │ • Verify     │   │ • Inventory  │   │ • Resolve    │            │
+  │  │ • History    │   │              │   │              │            │
+  │  └──────────┬───┘   └──────────────┘   └──────────┬───┘            │
+  │             │                              │       │                │
+  │             └──────────┬───────────────────┘       │                │
+  │                        │                           │                │
+  │             ┌──────────▼───────────────────────────▼───┐            │
+  │             │          maintenance_log                 │            │
+  │             │  • Log Entry  • Ownership Handoff       │            │
+  │             └──────────────────┬──────────────────────┘            │
+  └────────────────────────────────┼─────────────────────────────────────┘
+                                   │ Soroban RPC
+  ┌────────────────────────────────▼─────────────────────────────────────┐
+  │                    @lumachain/sdk                                    │
+  │           Stellar SDK · Freighter API · QR Encode/Scan              │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │ TypeScript API
+  ┌────────────────────────────────▼─────────────────────────────────────┐
+  │                    @lumachain/api                                    │
+  │              Hono + Zod · REST Gateway · Port 3001                  │
+  │                                                                      │
+  │   /api/assets   /api/registry   /api/warranty   /api/maintenance    │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │ REST (JSON)
+  ┌────────────────────────────────▼─────────────────────────────────────┐
+  │                         /web                                         │
+  │           React · Vite · Framer Motion · Lucide · Router v7         │
+  │                                                                      │
+  │   • Landing Page    • Dashboard    • Asset Verification             │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+  ┌────────────────────────────────▼─────────────────────────────────────┐
+  │              Docker Compose · Container Orchestration                │
+  └──────────────────────────────────────────────────────────────────────┘
+
+
+  ── Supply Chain Flow ──────────────────────────────────────────────────
+
+  MANUFACTURER ──► SUPPLIER ──► WAREHOUSE ──► INSTALLER ──► CUSTOMER
+       mint          transfer      transfer      transfer       own
+      asset         custody       custody       custody       asset
+
+                     Immutable on-chain history
+                     recorded per asset NFT
+```
+
 ## 📖 Architecture & Smart Contract Logic
 
 The core logic is divided into four modular Rust-based Soroban smart contracts. This architecture ensures separation of concerns, upgradeability, and isolated state management.
