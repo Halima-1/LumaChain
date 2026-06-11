@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Sun, Menu, X, Globe } from 'lucide-react';
+import { Sun, Menu, X, Globe, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useWallet } from '../hooks/useWallet';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const wallet = useWallet();
+
+  useEffect(() => {
+    wallet.checkConnection();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +38,6 @@ export const Navbar = () => {
           <span>LumaChain</span>
         </Link>
 
-        {/* Desktop Nav */}
         <div className="nav-links">
           {navLinks.map((link) => (
             <Link
@@ -50,12 +55,35 @@ export const Navbar = () => {
             <Globe size={18} />
             <span>Docs</span>
           </button>
-          <button className="btn btn-primary">
-            Connect Wallet
-          </button>
-          
-          <button 
-            className="mobile-menu-btn" 
+
+          {wallet.connected ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{
+                fontSize: '13px',
+                color: 'var(--secondary)',
+                fontFamily: 'monospace',
+                maxWidth: '160px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}>
+                {wallet.publicKey}
+              </span>
+              <button className="btn btn-outline" onClick={wallet.disconnect} title="Disconnect wallet">
+                <LogOut size={18} />
+              </button>
+            </div>
+          ) : (
+            <button className="btn btn-primary" onClick={wallet.connect} disabled={wallet.loading}>
+              {wallet.loading ? 'Connecting...' : 'Connect Wallet'}
+            </button>
+          )}
+
+          {wallet.error && !wallet.connected && (
+            <span style={{ fontSize: '12px', color: '#FF6B00', maxWidth: '200px' }}>{wallet.error}</span>
+          )}
+
+          <button
+            className="mobile-menu-btn"
             style={{ display: 'none', color: 'white', background: 'none', border: 'none' }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
